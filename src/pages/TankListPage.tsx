@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { fetchTanks } from "@/lib/api";
+import { fetchTanksOverview } from "@/lib/api";
 import TankCard from "@/components/TankCard";
 import TankForm from "@/components/TankForm";
-import type { Tank } from "@/lib/types";
+import type { TankOverview } from "@/lib/types";
 
 export default function TankListPage() {
-  const [tanks, setTanks] = useState<Tank[]>([]);
+  const [tanks, setTanks] = useState<TankOverview[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -13,7 +13,7 @@ export default function TankListPage() {
     setLoading(true);
     setErrorMessage(null);
     try {
-      setTanks(await fetchTanks());
+      setTanks(await fetchTanksOverview());
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "水槽一覧の取得に失敗しました");
     } finally {
@@ -32,7 +32,7 @@ export default function TankListPage() {
       {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
       {loading && <p className="text-water-400">読み込み中...</p>}
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-3 gap-4">
         {tanks.map((tank) => (
           <TankCard key={tank.id} tank={tank} />
         ))}

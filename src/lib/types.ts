@@ -21,6 +21,11 @@ export type WaterRecord = {
   updated_at: string;
 };
 
+// 水槽一覧カード表示用：水槽情報に最新の記録を添えたもの
+export type TankOverview = Tank & {
+  latestRecord: WaterRecord | null;
+};
+
 export type WaterRecordInput = {
   tank_id: string;
   record_date: string;
