@@ -21,3 +21,13 @@ export function todayDateKey(): string {
   const now = new Date();
   return toDateKey(now.getFullYear(), now.getMonth() + 1, now.getDate());
 }
+
+export function startOfMonthDateKey(): string {
+  const now = new Date();
+  return toDateKey(now.getFullYear(), now.getMonth() + 1, 1);
+}
+
+export function formatDateJa(dateKey: string): string {
+  const { year, month, day } = parseDateKey(dateKey);
+  return `${year}年${month}月${day}日`;
+}

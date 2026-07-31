@@ -1,3 +1,5 @@
+import { toneFor } from "@/lib/waterQuality";
+
 type Props = {
   label: string;
   value: number | null;
@@ -5,24 +7,6 @@ type Props = {
   plain?: boolean; // trueの場合は危険域の色分けを行わず数値のみ表示する（水温など安全域が種によって異なる項目向け）
   small?: boolean; // trueの場合はカードグリッドなど省スペース箇所向けの小型表示にする
 };
-
-// 理想値・安全値・危険値の3段階で色分けする
-function toneFor(label: string, value: number): "ideal" | "safe" | "danger" {
-  if (label === "PH") {
-    if (value >= 6.8 && value <= 7.0) return "ideal";
-    if (value >= 6.0 && value <= 7.5) return "safe";
-    return "danger";
-  }
-  if (label === "NH3" || label === "NO2-") {
-    if (value === 0) return "ideal";
-    if (value <= 0.5) return "safe";
-    return "danger";
-  }
-  // NO3-（低すぎる場合も高すぎる場合も危険とする）
-  if (value >= 80 && value <= 120) return "ideal";
-  if (value >= 60 && value < 80) return "safe";
-  return "danger";
-}
 
 const toneClass: Record<string, string> = {
   ideal: "bg-water-800 text-white",

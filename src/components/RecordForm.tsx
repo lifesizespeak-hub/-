@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { upsertWaterRecord, deleteWaterRecord } from "@/lib/api";
-import { daysInMonth, parseDateKey, toDateKey, weekdayLabel } from "@/lib/date";
+import { parseDateKey, toDateKey } from "@/lib/date";
+import DateSelect from "@/components/DateSelect";
 import type { WaterRecord } from "@/lib/types";
 
 type Props = {
@@ -9,10 +10,6 @@ type Props = {
   date: string; // YYYY-MM-DD
   existing: WaterRecord | null;
 };
-
-const THIS_YEAR = new Date().getFullYear();
-const YEAR_OPTIONS = Array.from({ length: 7 }, (_, i) => THIS_YEAR - 5 + i); // 年は現在年を基準に自動生成
-const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => i + 1);
 
 export default function RecordForm({ tankId, date, existing }: Props) {
   const navigate = useNavigate();
@@ -31,16 +28,6 @@ export default function RecordForm({ tankId, date, existing }: Props) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const toNumberOrNull = (value: string) => (value === "" ? null : Number(value));
-
-  // 月・年の変更で日数が変わる場合、選択中の日を月末に丸める
-  function handleYearChange(newYear: number) {
-    setYear(newYear);
-    setDay((d) => Math.min(d, daysInMonth(newYear, month)));
-  }
-  function handleMonthChange(newMonth: number) {
-    setMonth(newMonth);
-    setDay((d) => Math.min(d, daysInMonth(year, newMonth)));
-  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -83,42 +70,16 @@ export default function RecordForm({ tankId, date, existing }: Props) {
     <form onSubmit={handleSubmit} className="card space-y-4 p-6">
       <div className="space-y-1">
         <span className="text-sm text-water-600">記録日</span>
-        <div className="flex flex-wrap items-center gap-2">
-          <select
-            value={year}
-            onChange={(e) => handleYearChange(Number(e.target.value))}
-            className="input-field w-auto"
-          >
-            {YEAR_OPTIONS.map((y) => (
-              <option key={y} value={y}>
-                {y}年
-              </option>
-            ))}
-          </select>
-          <select
-            value={month}
-            onChange={(e) => handleMonthChange(Number(e.target.value))}
-            className="input-field w-auto"
-          >
-            {MONTH_OPTIONS.map((m) => (
-              <option key={m} value={m}>
-                {m}月
-              </option>
-            ))}
-          </select>
-          <select
-            value={day}
-            onChange={(e) => setDay(Number(e.target.value))}
-            className="input-field w-auto"
-          >
-            {Array.from({ length: daysInMonth(year, month) }, (_, i) => i + 1).map((d) => (
-              <option key={d} value={d}>
-                {d}日
-              </option>
-            ))}
-          </select>
-          <span className="text-water-500">（{weekdayLabel(year, month, day)}曜日）</span>
-        </div>
+        <DateSelect
+          year={year}
+          month={month}
+          day={day}
+          onChange={(y, m, d) => {
+            setYear(y);
+            setMonth(m);
+            setDay(d);
+          }}
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
