@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import type { WaterRecord } from "@/lib/types";
 import WaterQualityBadge from "@/components/WaterQualityBadge";
 
@@ -9,6 +9,7 @@ export default function RecordList({
   tankId: string;
   records: WaterRecord[];
 }) {
+  // 新しい順に表示する
   const sorted = [...records].sort((a, b) => (a.record_date < b.record_date ? 1 : -1));
 
   if (sorted.length === 0) {
@@ -20,7 +21,7 @@ export default function RecordList({
       {sorted.map((r) => (
         <li key={r.id}>
           <Link
-            href={`/tanks/${tankId}/records/${r.record_date}`}
+            to={`/tanks/${tankId}/records/${r.record_date}`}
             className="card block space-y-2 px-5 py-4 transition hover:ring-leaf-300"
           >
             <div className="flex items-center justify-between">
@@ -36,6 +37,7 @@ export default function RecordList({
               <WaterQualityBadge label="NH3" value={r.nh3} />
               <WaterQualityBadge label="NO2-" value={r.no2} />
               <WaterQualityBadge label="NO3-" value={r.no3} />
+              <WaterQualityBadge label="水温℃" value={r.water_temp} plain />
             </div>
             {r.work_note && <p className="text-sm text-water-600">{r.work_note}</p>}
           </Link>

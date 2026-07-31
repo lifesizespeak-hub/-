@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import type { WaterRecord } from "@/lib/types";
 
 type Props = {
@@ -6,13 +6,14 @@ type Props = {
   year: number;
   month: number; // 1-12
   records: WaterRecord[];
+  onChangeMonth: (year: number, month: number) => void;
 };
 
 function toDateKey(y: number, m: number, d: number) {
   return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
-export default function RecordCalendar({ tankId, year, month, records }: Props) {
+export default function RecordCalendar({ tankId, year, month, records, onChangeMonth }: Props) {
   const recordedDates = new Set(records.map((r) => r.record_date));
 
   const firstDay = new Date(year, month - 1, 1);
@@ -35,21 +36,21 @@ export default function RecordCalendar({ tankId, year, month, records }: Props) 
   return (
     <div className="card p-5">
       <div className="mb-4 flex items-center justify-between">
-        <Link
-          href={`/tanks/${tankId}?year=${prevMonth.year}&month=${prevMonth.month}`}
+        <button
+          onClick={() => onChangeMonth(prevMonth.year, prevMonth.month)}
           className="btn-secondary px-3 py-1 text-sm"
         >
           ← 前月
-        </Link>
+        </button>
         <span className="font-medium text-water-800">
           {year}年 {month}月
         </span>
-        <Link
-          href={`/tanks/${tankId}?year=${nextMonth.year}&month=${nextMonth.month}`}
+        <button
+          onClick={() => onChangeMonth(nextMonth.year, nextMonth.month)}
           className="btn-secondary px-3 py-1 text-sm"
         >
           次月 →
-        </Link>
+        </button>
       </div>
 
       <div className="grid grid-cols-7 gap-1 text-center text-sm text-water-500">
@@ -71,7 +72,7 @@ export default function RecordCalendar({ tankId, year, month, records }: Props) 
           return (
             <Link
               key={dateKey}
-              href={`/tanks/${tankId}/records/${dateKey}`}
+              to={`/tanks/${tankId}/records/${dateKey}`}
               className={`flex aspect-square flex-col items-center justify-center rounded-lg text-sm transition hover:bg-leaf-50 ${
                 isToday ? "ring-1 ring-leaf-400" : ""
               }`}

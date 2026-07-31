@@ -10,10 +10,11 @@ create table water_records (
   id           uuid primary key default gen_random_uuid(),
   tank_id      uuid not null references tanks(id) on delete cascade,
   record_date  date not null,
-  ph           numeric(3,1),
-  nh3          numeric(4,2),
-  no2          numeric(4,2),
-  no3          numeric(5,2),
+  ph           numeric(3,1),  -- 単位なし
+  nh3          numeric(4,2),  -- アンモニア(ppm / mg/L)
+  no2          numeric(4,2),  -- 亜硝酸(ppm / mg/L)
+  no3          numeric(5,2),  -- 硝酸塩(ppm / mg/L)
+  water_temp   numeric(4,1),  -- 水温(℃)
   water_added  boolean not null default false,
   work_note    text,
   created_at   timestamptz not null default now(),
@@ -23,9 +24,22 @@ create table water_records (
 
 create index idx_water_records_tank_date on water_records (tank_id, record_date desc);
 
--- 個人専用アプリのためRLSは無効化（将来公開する場合はここに認証・ポリシーを追加）
-alter table tanks disable row level security;
-alter table water_records disable row level security;
+-- RLSを有効化する。ログイン機能はまだ無いため、anon/authenticatedロールに全操作を許可するポリシーを設定する
+-- （将来ログイン機能を追加する場合は、ここをuser_id列とauth.uid()に基づくポリシーへ差し替える）
+alter table tanks enable row level security;
+alter table water_records enable row level security;
+
+create policy "tanks_allow_all" on tanks
+  for all
+  to anon, authenticated
+  using (true)
+  with check (true);
+
+create policy "water_records_allow_all" on water_records
+  for all
+  to anon, authenticated
+  using (true)
+  with check (true);
 
 -- updated_at 自動更新
 create or replace function set_updated_at()
