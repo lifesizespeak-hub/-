@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: linear-gradient(180deg, #f0f8fa 0%, #f2f9ed 100%);
+  min-height: 100vh;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl bg-white/80 shadow-sm ring-1 ring-water-100 backdrop-blur-sm;
+  }
+
+  .btn-primary {
+    @apply rounded-full bg-leaf-600 px-5 py-2 text-white transition hover:bg-leaf-700;
+  }
+
+  .btn-secondary {
+    @apply rounded-full bg-water-100 px-5 py-2 text-water-800 transition hover:bg-water-200;
+  }
+
+  .input-field {
+    @apply w-full rounded-lg border border-water-200 bg-white px-3 py-2 text-water-900 focus:border-leaf-500 focus:outline-none focus:ring-1 focus:ring-leaf-500;
+  }
+}
