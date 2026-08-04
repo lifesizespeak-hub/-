@@ -6,3 +6,5 @@ dist/
 npm-debug.log*
 .DS_Store
 *.tsbuildinfo
+start-app.ps1
+dev-server.log
