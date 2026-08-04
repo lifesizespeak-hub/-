@@ -13,7 +13,7 @@ export default function App() {
       <header className="border-b border-water-100 bg-white/60 backdrop-blur-sm">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <Link to="/" className="text-lg font-semibold text-leaf-700">
-            🌿 アクアポニックス管理
+            🐠 アクアポニックス管理
           </Link>
           <Link to="/export" className="text-sm text-water-600 hover:underline">
             Excel出力

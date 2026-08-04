@@ -8,3 +8,4 @@ npm-debug.log*
 *.tsbuildinfo
 start-app.ps1
 dev-server.log
+fish-icon.ico
